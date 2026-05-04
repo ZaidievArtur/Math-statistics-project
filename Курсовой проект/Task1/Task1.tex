@@ -1,0 +1,364 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{graphicx}
+
+\geometry{
+  left=25mm,
+  right=25mm,
+  top=25mm,
+  bottom=25mm
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue
+}
+
+\begin{document}
+\selectlanguage{russian}
+
+% ================= ТИТУЛЬНЫЙ ЛИСТ =================
+
+\begin{titlepage}
+  \begin{center}
+    {Санкт-Петербургский политехнический университет Петра Великого\\
+    Институт прикладной математики и механики\\[0.5em]
+    \textbf{Высшая школа прикладной математики и вычислительной физики}}
+
+    \vfill
+
+    {\LARGE\bfseries Отчёт по курсовой работе\\ Часть №1\par}
+    \vspace{1em}
+    {\Large по дисциплине\\[0.3em]
+    {\bfseries «Проект по математической статистике»}}
+
+    \vfill
+
+    \begin{flushright}
+        Выполнил\\
+        студент гр. 5030102/20202:\\
+        Зайдиев Артур
+    \end{flushright}
+
+    \begin{flushright}
+        Проверил\\
+        Преподаватель: Заяц Олег Иванович
+    \end{flushright}
+
+    \vfill
+    Санкт-Петербург\\
+    2026
+  \end{center}
+\end{titlepage}
+
+\setcounter{page}{2}
+\newpage
+
+% ================= ОСНОВНАЯ ЧАСТЬ =================
+
+\section*{Вычисление ОИСКО: Показательное распределение и колокольное ядро}
+
+Задана плотность показательного распределения:
+
+\[
+f_0(x)=
+\begin{cases}
+\lambda e^{-\lambda x}, & x \ge 0,\\
+0, & x<0
+\end{cases}
+\]
+
+где параметр распределения принимается равным:
+
+\[
+\lambda = 1
+\]
+
+Задана плотность колокольного (гауссового) ядра:
+
+\[
+K(x)=\frac{1}{\sqrt{2\pi}}e^{-x^2/2}
+\]
+
+Найдём характеристические функции.
+
+Для показательного распределения:
+
+\[
+E_0(z)=\int_0^\infty \lambda e^{-\lambda x}e^{izx}dx
+\]
+
+\[
+E_0(z)=\lambda \int_0^\infty e^{-(\lambda-iz)x}dx
+\]
+
+\[
+E_0(z)=\frac{\lambda}{\lambda-iz}
+\]
+
+Следовательно:
+
+\[
+|E_0(z)|^2=
+\frac{\lambda^2}{\lambda^2+z^2}
+\]
+
+Для колокольного ядра:
+
+\[
+E_K(z)=\int_{-\infty}^{\infty}
+\frac{1}{\sqrt{2\pi}}e^{-x^2/2}e^{izx}dx
+\]
+
+\[
+E_K(z)=e^{-z^2/2}
+\]
+
+---
+
+Относительное интегральное среднеквадратическое отклонение вычисляется по формуле:
+
+\[
+\bar{\delta}_n(\xi)=
+1+\frac{I_1}{n\xi I_4}
++\left(1-\frac1n\right)\frac{I_2(\xi)}{I_4}
+-2\frac{I_3(\xi)}{I_4}
+\]
+
+Необходимо вычислить интегралы.
+
+% ================= I1 I4 =================
+
+\subsection*{1. Вычисление $I_1$ и $I_4$}
+
+\[
+I_1=
+\int_{-\infty}^{\infty}|E_K(z)|^2dz
+\]
+
+\[
+I_1=
+\int_{-\infty}^{\infty}e^{-z^2}dz
+\]
+
+Известно, что гауссов интеграл равен:
+
+\[
+I_1=\sqrt{\pi}
+\]
+
+---
+
+Вычислим $I_4$:
+
+\[
+I_4=
+\int_{-\infty}^{\infty}|E_0(z)|^2dz
+\]
+
+\[
+I_4=
+\int_{-\infty}^{\infty}
+\frac{\lambda^2}{\lambda^2+z^2}dz
+\]
+
+Используя табличный интеграл:
+
+\[
+\int_{-\infty}^{\infty}\frac{dz}{a^2+z^2}=\frac{\pi}{a}
+\]
+
+получаем:
+
+\[
+I_4=\pi\lambda
+\]
+
+% ================= I2 =================
+
+\subsection*{2. Вычисление $I_2(\xi)$}
+
+\[
+I_2(\xi)=
+\int_{-\infty}^{\infty}
+|E_0(z)|^2|E_K(\xi z)|^2dz
+\]
+
+Подставляя выражения:
+
+\[
+I_2(\xi)=
+\int_{-\infty}^{\infty}
+\frac{\lambda^2}{\lambda^2+z^2}e^{-\xi^2z^2}dz
+\]
+
+Используем известный интеграл:
+
+\[
+\int_{-\infty}^{\infty}
+\frac{e^{-az^2}}{z^2+b^2}dz=
+\frac{\pi}{b}e^{ab^2}\operatorname{erfc}(b\sqrt a)
+\]
+
+Тогда:
+
+\[
+I_2(\xi)=
+\pi\lambda
+e^{\lambda^2\xi^2}
+\operatorname{erfc}(\lambda\xi)
+\]
+
+где
+
+\[
+\operatorname{erfc}(x)=
+\frac{2}{\sqrt{\pi}}
+\int_x^\infty e^{-t^2}dt
+\]
+
+---
+
+% ================= I3 =================
+
+\subsection*{3. Вычисление $I_3(\xi)$}
+
+\[
+I_3(\xi)=
+\int_{-\infty}^{\infty}
+|E_0(z)|^2E_K(\xi z)dz
+\]
+
+Подставим:
+
+\[
+I_3(\xi)=
+\int_{-\infty}^{\infty}
+\frac{\lambda^2}{\lambda^2+z^2}
+e^{-\xi^2z^2/2}dz
+\]
+
+Используя тот же табличный интеграл:
+
+\[
+I_3(\xi)=
+\pi\lambda
+e^{\lambda^2\xi^2/2}
+\operatorname{erfc}
+\left(
+\frac{\lambda\xi}{\sqrt2}
+\right)
+\]
+
+% ================= ИТОГ =================
+
+\subsection*{Итоговая формула ОИСКО}
+
+Подставляя найденные значения:
+
+\[
+I_1=\sqrt{\pi}
+\]
+
+\[
+I_4=\pi\lambda
+\]
+
+\[
+I_2(\xi)=
+\pi\lambda
+e^{\lambda^2\xi^2}
+\operatorname{erfc}(\lambda\xi)
+\]
+
+\[
+I_3(\xi)=
+\pi\lambda
+e^{\lambda^2\xi^2/2}
+\operatorname{erfc}
+\left(
+\frac{\lambda\xi}{\sqrt2}
+\right)
+\]
+
+получаем окончательное выражение:
+
+\[
+\bar{\delta}_n(\xi)=
+1+
+\frac{\sqrt{\pi}}{n\xi\pi\lambda}
++
+\left(1-\frac1n\right)
+e^{\lambda^2\xi^2}
+\operatorname{erfc}(\lambda\xi)
+\]
+
+\[
+-2
+e^{\lambda^2\xi^2/2}
+\operatorname{erfc}
+\left(
+\frac{\lambda\xi}{\sqrt2}
+\right)
+\]
+
+При вычислениях используется:
+
+\[
+\lambda=1
+\]
+
+% ================= ГРАФИКИ =================
+
+\section*{Построение графиков}
+
+Для анализа поведения ОИСКО построены следующие графики.
+
+\newpage
+
+\subsection*{График 1. Зависимость ОИСКО от параметра сглаживания}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f1.png}
+    \caption{ОИСКО для различных объёмов выборки}
+\end{figure}
+
+\subsection*{График 2. Зависимость оптимального параметра $\xi_{opt}$ от объёма выборки}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f2.png}
+    \caption{Зависимость $\xi_{opt}(n)$}
+\end{figure}
+
+\newpage
+
+\subsection*{График 3. Минимальное значение ОИСКО}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f3.png}
+    \caption{Нижняя граница ОИСКО}
+\end{figure}
+
+\subsection*{График 4. Эффективность ядерной оценки}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f4.png}
+    \caption{Эффективность оценки}
+\end{figure}
+
+\end{document}
