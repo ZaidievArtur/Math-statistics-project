@@ -1,0 +1,170 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{graphicx}
+
+\geometry{
+  left=25mm,
+  right=25mm,
+  top=25mm,
+  bottom=25mm
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue
+}
+
+\begin{document}
+\selectlanguage{russian}
+
+% ================= ТИТУЛЬНЫЙ ЛИСТ =================
+
+\begin{titlepage}
+  \begin{center}
+    {Санкт-Петербургский политехнический университет Петра Великого\\
+    Институт прикладной математики и механики\\[0.5em]
+    \textbf{Высшая школа прикладной математики и вычислительной физики}}
+
+    \vfill
+
+    {\LARGE\bfseries Отчёт по курсовой работе\\ Часть №2\par}
+    \vspace{1em}
+    {\Large по дисциплине\\[0.3em]
+    {\bfseries «Проект по математической статистике»}}
+
+    \vfill
+
+    \begin{flushright}
+        Выполнил\\
+        студент гр. 5030102/20202:\\
+        Зайдиев Артур
+    \end{flushright}
+
+    \begin{flushright}
+        Проверил\\
+        Преподаватель: Заяц Олег Иванович
+    \end{flushright}
+
+    \vfill
+    Санкт-Петербург\\
+    2026
+  \end{center}
+\end{titlepage}
+
+\setcounter{page}{2}
+\newpage
+
+% ================= ОСНОВНАЯ ЧАСТЬ =================
+
+\section*{Вычисление ОИСКО ядерной оценки: показательное распределение и колокольное ядро}
+
+Задана плотность показательного распределения:
+
+\[
+f_0(x)=
+\begin{cases}
+\lambda e^{-\lambda x}, & x \ge 0,\\
+0, & x<0
+\end{cases}
+\]
+
+где $\lambda = 1$.
+
+Для оценки плотности используется ядерная оценка с колокольным (гауссовским) ядром:
+
+\[
+K(u)=\frac{1}{\sqrt{2\pi}}e^{-u^2/2}, \quad \hat{f}_n(x) = \frac{1}{n\xi}\sum_{i=1}^n K\left( \frac{x - X_i}{\xi} \right).
+\]
+
+Относительное интегральное среднеквадратическое отклонение (ОИСКО) вычисляется по формуле:
+
+\[
+\bar{\delta}_n(\xi)=
+1+\frac{I_1}{n\xi I_4}
++\left(1-\frac{1}{n}\right)\frac{I_2(\xi)}{I_4}
+-2\frac{I_3(\xi)}{I_4}.
+\]
+
+\subsection*{Вычисление интегралов}
+
+Были получены следующие аналитические выражения:
+
+\[
+I_1 = \sqrt{\pi}, \quad I_4 = \pi\lambda = \pi,
+\]
+
+\[
+I_2(\xi) = \pi\lambda \, e^{\lambda^2 \xi^2} \operatorname{erfc}(\lambda \xi),
+\]
+
+\[
+I_3(\xi) = \pi\lambda \, e^{\lambda^2 \xi^2 / 2} \operatorname{erfc}\left( \frac{\lambda \xi}{\sqrt{2}} \right).
+\]
+
+При $\lambda=1$ окончательная формула ОИСКО принимает вид:
+
+\[
+\bar{\delta}_n(\xi)=
+1 + \frac{\sqrt{\pi}}{n\xi \pi}
++ \left(1-\frac{1}{n}\right) e^{\xi^2} \operatorname{erfc}(\xi)
+- 2 e^{\xi^2 / 2} \operatorname{erfc}\left( \frac{\xi}{\sqrt{2}} \right).
+\]
+
+Оптимальное значение параметра сглаживания $\xi^*$ находится путём численной минимизации $\bar{\delta}_n(\xi)$.
+
+\newpage
+
+\section*{Построение графиков}
+
+Для анализа качества ядерной оценки и сравнения её эффективности с гистограммной оценкой были построены следующие графики.
+
+\subsection*{График 1. Зависимость ОИСКО $\bar{\delta}_n(\xi)$ от параметра $\xi$}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f1_kernel.png}
+    \caption{ОИСКО ядерной оценки $\bar{\delta}_n(\xi)$ для $n=10,50,250,1000$}
+    \label{fig:kernel_delta}
+\end{figure}
+
+\subsection*{График 2. Зависимость оптимального параметра $\xi_{opt}$ от объёма выборки $n$}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f2_xi_opt.png}
+    \caption{Оптимальный параметр сглаживания $\xi_{opt}$ ядерной оценки}
+    \label{fig:xi_opt}
+\end{figure}
+
+\newpage
+
+\subsection*{График 3. Зависимость нижней границы погрешности $\bar{\delta}_{n,\min}$ от $n$}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f3_delta_min.png}
+    \caption{Минимальное значение ОИСКО $\bar{\delta}_{n,\min}$ ядерной оценки}
+    \label{fig:delta_min}
+\end{figure}
+
+\subsection*{График 4. Сравнение ядерной оценки и гистограммы}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/f4_comparison.png}
+    \caption{Сравнение минимального ОИСКО ядерной оценки (колокольное ядро) и гистограммной оценки}
+    \label{fig:comparison}
+\end{figure}
+
+\end{document}
